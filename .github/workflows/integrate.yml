@@ -1,0 +1,17 @@
+name: Cargo Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  test_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: rustup toolchain install stable --component llvm-tools-preview
+      - uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Runs all tests
+        run: cargo llvm-cov --all-features --workspace
+
+      - name: Build in release mode
+        run: cargo b --release
